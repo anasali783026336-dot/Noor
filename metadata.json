@@ -1,0 +1,6 @@
+{
+  "name": "نور — NOOR",
+  "description": "منصة قرآنية عالمية متكاملة ومجانية بالكامل لقراءة القرآن الكريم بالرسم العثماني، التلاوات الصوتية، التفسير، الحفظ والمراجعة، الأذكار ومواقيت الصلاة والقبلة",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

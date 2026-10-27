@@ -1,0 +1,61 @@
+# Built application files
+*.apk
+*.aar
+*.aab
+*.ap_
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+build/
+*/build/
+
+# Gradle files
+.gradle/
+buildOutput.txt
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+*.jks
+*.keystore
+debug.keystore
+debug.keystore.base64
+
+# Firebase credentials (keep private)
+google-services.json
+
+# Log files
+*.log
+
+# Android Studio Navigation editor temp files
+.navigation/
+
+# Android Studio captures folder
+captures/
+
+# IntelliJ IDEA / Android Studio
+*.iml
+.idea/
+.kotlin/
+.externalNativeBuild/
+.cxx/
+
+# macOS system files
+.DS_Store
+Thumbs.db
+
+# AI Studio platform internal files
+.aistudio/
+.build-outputs/
