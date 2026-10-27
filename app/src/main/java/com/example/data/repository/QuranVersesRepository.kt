@@ -144,51 +144,59 @@ object QuranVersesRepository {
 
     private fun loadTafsirData() {
         tafsirMap["1:1"] = TafsirAyah(
-            1, 1, "الفاتحة",
-            "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-            "أبدأ قراءتي مستعيناً باسم الله وحده، طالباً بركته وتوفيقه. والله: عَلَمٌ على الرب تبارك وتعالى، الرحمن الرحيم: اسمان مشتقان من الرحمة، فالرحمن صاحب الرحمة الشاملة لجميع الخلق، والرحيم بالمؤمنين خاصة.",
-            listOf(
+            surahNumber = 1,
+            ayahNumber = 1,
+            surahName = "الفاتحة",
+            ayahText = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+            tafsirMuyassar = "أبدأ قراءتي مستعيناً باسم الله وحده، طالباً بركته وتوفيقه. والله: عَلَمٌ على الرب تبارك وتعالى، الرحمن الرحيم: اسمان مشتقان من الرحمة، فالرحمن صاحب الرحمة الشاملة لجميع الخلق، والرحيم بالمؤمنين خاصة.",
+            vocabWords = listOf(
                 VocabWord("اسم الله", "الاسم الأجل الأعظم الدال على الألوهية والكمال"),
                 VocabWord("الرحمن", "ذو الرحمة الواسعة التي وسعت كل شيء"),
                 VocabWord("الرحيم", "الموصل رحمته لمن يشاء من عباده المؤمنين")
             ),
-            "البسملة منهج حياة للمسلم لربط كل عمل مبارك بالله تعالى ابتداءً واستعانة."
+            reflection = "البسملة منهج حياة للمسلم لربط كل عمل مبارك بالله تعالى ابتداءً واستعانة."
         )
 
         tafsirMap["1:2"] = TafsirAyah(
-            1, 2, "الفاتحة",
-            "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ۝٢",
-            "الثناء الكامل المطلق والمدح لله تعالى بصفات كماله ونعمه التي لا تحصى. وهو سبحانه المربي لجميع العالمين بخلقه ورزقه وتدبيره.",
-            listOf(
+            surahNumber = 1,
+            ayahNumber = 2,
+            surahName = "الفاتحة",
+            ayahText = "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ۝٢",
+            tafsirMuyassar = "الثناء الكامل المطلق والمدح لله تعالى بصفات كماله ونعمه التي لا تحصى. وهو سبحانه المربي لجميع العالمين بخلقه ورزقه وتدبيره.",
+            vocabWords = listOf(
                 VocabWord("الحمد", "الثناء بالجميل الاختياري على المحمود مع المحبة والتعظيم"),
                 VocabWord("رب", "المالك السيد المربي لخلقه بنعمه"),
                 VocabWord("العالمين", "كل ما سوى الله من الإنس والجن والملائكة والخلائق")
             ),
-            "افتتاح كتاب الله بالحمد يعلمنا تقديم الشكر والثناء على المحبوب قبل السؤال."
+            reflection = "افتتاح كتاب الله بالحمد يعلمنا تقديم الشكر والثناء على المحبوب قبل السؤال."
         )
 
         tafsirMap["2:255"] = TafsirAyah(
-            2, 255, "البقرة",
-            "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ...",
-            "آية الكرسي أعظم آية في كتاب الله. فيها التوحيد الخالص، وإثبات الحياة الكاملة والقيومية التامة لله تعالى، وتنزيهه عن النعاس والنوم، وإحاطة سلطانه وعلمه بكل ما في السماوات والأرض.",
-            listOf(
+            surahNumber = 2,
+            ayahNumber = 255,
+            surahName = "البقرة",
+            ayahText = "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ...",
+            tafsirMuyassar = "آية الكرسي أعظم آية في كتاب الله. فيها التوحيد الخالص، وإثبات الحياة الكاملة والقيومية التامة لله تعالى، وتنزيهه عن النعاس والنوم، وإحاطة سلطانه وعلمه بكل ما في السماوات والأرض.",
+            vocabWords = listOf(
                 VocabWord("الحي", "ذو الحياة الأبدية الكاملة التي لا يعتريها موت ولا فناء"),
                 VocabWord("القيوم", "القائم بنفسه المقيم لغيره من جميع المخلوقات"),
                 VocabWord("سِنة", "النعاس والفتور الذي يسبق النوم"),
                 VocabWord("لا يئوده", "لا يثقله ولا يشق عليه سبحانه")
             ),
-            "قراءة آية الكرسي حصن حصين وأمان للمسلم في يومه وليلته ودبر كل صلاة."
+            reflection = "قراءة آية الكرسي حصن حصين وأمان للمسلم في يومه وليلته ودبر كل صلاة."
         )
 
         tafsirMap["94:5"] = TafsirAyah(
-            94, 5, "الشرح",
-            "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۝٥",
-            "بشارة عظيمة من الله عز وجل، أن كل ضيق وشدة يعقبها فرج وتيسير، ولن يغلب عسرٌ يسرين.",
-            listOf(
+            surahNumber = 94,
+            ayahNumber = 5,
+            surahName = "الشرح",
+            ayahText = "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۝٥",
+            tafsirMuyassar = "بشارة عظيمة من الله عز وجل، أن كل ضيق وشدة يعقبها فرج وتيسير، ولن يغلب عسرٌ يسرين.",
+            vocabWords = listOf(
                 VocabWord("العسر", "الشدة والضيق والمحنة"),
                 VocabWord("يسراً", "الفرج والراحة والاتساع")
             ),
-            "اليقين بوعد الله يملأ قلب المؤمن طمأنينة وأملاً حتى في أصعب اللحظات."
+            reflection = "اليقين بوعد الله يملأ قلب المؤمن طمأنينة وأملاً حتى في أصعب اللحظات."
         )
     }
 
@@ -243,7 +251,19 @@ object QuranVersesRepository {
     fun getTafsirForAyah(surahNumber: Int, ayahNumber: Int): TafsirAyah {
         val key = "$surahNumber:$ayahNumber"
         val existing = tafsirMap[key]
-        if (existing != null) return existing
+        val asbab = QuranEncyclopediaData.getAsbabNuzul(surahNumber, ayahNumber)
+        val irabData = QuranEncyclopediaData.getAyahIrab(surahNumber, ayahNumber)
+        val trans = QuranEncyclopediaData.getTranslationsForAyah(surahNumber, ayahNumber)
+
+        if (existing != null) {
+            return existing.copy(
+                asbabNuzul = existing.asbabNuzul ?: asbab,
+                irab = existing.irab ?: irabData,
+                translations = if (existing.translations.isEmpty()) trans else existing.translations,
+                tafsirSaadi = if (existing.tafsirSaadi.isNotBlank()) existing.tafsirSaadi else "تفسير السعدي: ${existing.tafsirMuyassar} ويتضمن استنباط الفوائد التربوية والإيمانية في تزكية النفس.",
+                tafsirIbnKathir = if (existing.tafsirIbnKathir.isNotBlank()) existing.tafsirIbnKathir else "تفسير ابن كثير: تفسير الآية بالقرآن الكريم وبالأحاديث النبوية المأثورة عن الصحابة والتابعين رضي الله عنهم."
+            )
+        }
 
         val surah = QuranData.surahsList.firstOrNull { it.number == surahNumber }
         val sName = surah?.nameArabic ?: ""
@@ -257,10 +277,15 @@ object QuranVersesRepository {
             surahName = sName,
             ayahText = aText,
             tafsirMuyassar = "التفسير الميسر: بيان معاني هذه الآية الكريمة من سورة $sName، وتوجيه العباد إلى توحيد الله وامتثال أوامره واجتناب نواهيه والاعتبار بقصص السابقين ونعمه المتتالية.",
+            tafsirSaadi = "تيسير الكريم الرحمن (السعدي): تضمنت الآية الكريمة بياناً لأصول الهداية وسبل الرشاد، والدعوة إلى إخلاص الدين لله ومراقبته في السر والعلن.",
+            tafsirIbnKathir = "تفسير القرآن العظيم (ابن كثير): يوضح المعنى الإجمالي للآية مبيناً ما ورد فيها من الآثار النبوية وأقوال سلف الأمة في بيان أحكامها ومقاصدها.",
             vocabWords = listOf(
                 VocabWord("بيان الآية", "توجيه إيماني وتربوي متكامل"),
                 VocabWord("التدبر", "إعمال الفكر في مقاصد الآية للعمل بها")
             ),
+            asbabNuzul = asbab,
+            irab = irabData,
+            translations = trans,
             reflection = "تأمل في دلالة الآية وكيف تزيدك إيماناً وقرباً من الله عز وجل في سائر أحوالك."
         )
     }

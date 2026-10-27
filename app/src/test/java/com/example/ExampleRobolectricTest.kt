@@ -2,10 +2,12 @@ package com.example
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import com.example.data.ai.AiQuranTutorEngine
 import com.example.data.model.MajorIslamicCities
 import com.example.data.model.PrayerCalculator
 import com.example.data.model.RevelationType
 import com.example.data.repository.QuranData
+import com.example.data.repository.QuranEncyclopediaData
 import com.example.data.repository.QuranVersesRepository
 import org.junit.Assert.*
 import org.junit.Test
@@ -66,5 +68,48 @@ class ExampleRobolectricTest {
 
         val searchResults = QuranVersesRepository.searchAyahs("الرحمن")
         assertTrue(searchResults.isNotEmpty())
+    }
+
+    @Test
+    fun testQuranEncyclopediaMultiTafsirAndSciences() {
+        // Test Ayah Al-Kursi (2:255)
+        val tafsirKursi = QuranVersesRepository.getTafsirForAyah(2, 255)
+        assertNotNull(tafsirKursi)
+        assertTrue(tafsirKursi.tafsirMuyassar.isNotBlank())
+        assertTrue(tafsirKursi.tafsirSaadi.isNotBlank())
+        assertTrue(tafsirKursi.tafsirIbnKathir.isNotBlank())
+        assertTrue(tafsirKursi.vocabWords.isNotEmpty())
+        assertNotNull(tafsirKursi.irab)
+        assertFalse(tafsirKursi.translations.isEmpty())
+        assertTrue(tafsirKursi.translations.containsKey("en"))
+        assertTrue(tafsirKursi.translations.containsKey("fr"))
+    }
+
+    @Test
+    fun testAiQuranTutorEngineQueries() {
+        // 1. Asbab Al Nuzul query
+        val replyAsbab = AiQuranTutorEngine.processQuery("ما سبب نزول سورة الكهف؟")
+        assertFalse(replyAsbab.isUser)
+        assertTrue(replyAsbab.text.contains("الكهف") || replyAsbab.text.contains("سبب"))
+        assertTrue(replyAsbab.citations.isNotEmpty())
+
+        // 2. Educational Quiz query
+        val replyQuiz = AiQuranTutorEngine.processQuery("اختبرني في جزء عم")
+        assertNotNull(replyQuiz.quizItem)
+        assertEquals(3, replyQuiz.quizItem!!.options.size)
+        assertTrue(replyQuiz.quizItem!!.explanation.isNotBlank())
+
+        // 3. Memorization planning query
+        val replyMemo = AiQuranTutorEngine.processQuery("ضع لي خطة لحفظ سورة الملك")
+        assertTrue(replyMemo.text.contains("الملك") || replyMemo.text.contains("خطة") || replyMemo.text.contains("حفظ"))
+    }
+
+    @Test
+    fun testQuranTopicalIndex() {
+        val topics = QuranEncyclopediaData.quranTopics
+        assertTrue(topics.size >= 6)
+        val tawheed = topics.firstOrNull { it.id == "tawheed" }
+        assertNotNull(tawheed)
+        assertTrue(tawheed!!.ayahsList.isNotEmpty())
     }
 }

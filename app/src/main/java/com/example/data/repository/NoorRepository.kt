@@ -25,6 +25,8 @@ data class UserSettings(
     val backgroundTheme: ReadingBackgroundTheme = ReadingBackgroundTheme.EMERALD,
     val showTashkeel: Boolean = true,
     val autoPlayNextAyah: Boolean = true,
+    val appLanguageCode: String = "ar", // ar, en, fr, ur, id, tr, de, es
+    val selectedTafsirSource: TafsirSource = TafsirSource.MUYASSAR,
     val selectedCity: CityLocation = MajorIslamicCities[0] // مكة المكرمة default
 )
 
@@ -116,6 +118,109 @@ class NoorRepository(context: Context) {
         dao.deleteMemorizationItem(item)
     }
 
+    // Personal Notes on Ayahs
+    val allNotes: Flow<List<AyahNoteEntity>> = dao.getAllNotes()
+
+    fun getNotesForAyah(surahNumber: Int, ayahNumber: Int): Flow<List<AyahNoteEntity>> {
+        return dao.getNotesForAyah(surahNumber, ayahNumber)
+    }
+
+    suspend fun addAyahNote(
+        surahNumber: Int,
+        ayahNumber: Int,
+        surahName: String,
+        ayahText: String,
+        noteText: String
+    ) {
+        dao.insertAyahNote(
+            AyahNoteEntity(
+                surahNumber = surahNumber,
+                ayahNumber = ayahNumber,
+                surahName = surahName,
+                ayahText = ayahText,
+                noteText = noteText
+            )
+        )
+    }
+
+    suspend fun deleteAyahNote(note: AyahNoteEntity) {
+        dao.deleteAyahNote(note)
+    }
+
+    // Ayah Collections
+    val allCollections: Flow<List<AyahCollectionEntity>> = dao.getAllCollections()
+
+    suspend fun createCollection(title: String, description: String, colorHex: String = "#064E3B"): Long {
+        return dao.insertCollection(
+            AyahCollectionEntity(
+                titleArabic = title,
+                description = description,
+                colorHex = colorHex
+            )
+        )
+    }
+
+    suspend fun deleteCollection(collection: AyahCollectionEntity) {
+        dao.deleteCollection(collection)
+    }
+
+    fun getCollectionItems(collectionId: Int): Flow<List<CollectionAyahItemEntity>> {
+        return dao.getItemsForCollection(collectionId)
+    }
+
+    suspend fun addAyahToCollection(
+        collectionId: Int,
+        surahNumber: Int,
+        surahName: String,
+        ayahNumber: Int,
+        ayahText: String,
+        pageNumber: Int
+    ) {
+        dao.insertCollectionItem(
+            CollectionAyahItemEntity(
+                collectionId = collectionId,
+                surahNumber = surahNumber,
+                surahName = surahName,
+                ayahNumber = ayahNumber,
+                ayahText = ayahText,
+                pageNumber = pageNumber
+            )
+        )
+    }
+
+    suspend fun deleteCollectionItem(item: CollectionAyahItemEntity) {
+        dao.deleteCollectionItem(item)
+    }
+
+    // Khatma Plans
+    val allKhatmaPlans: Flow<List<KhatmaPlanEntity>> = dao.getAllKhatmaPlans()
+
+    suspend fun createKhatmaPlan(title: String, targetDays: Int, pagesPerDay: Int) {
+        dao.insertKhatmaPlan(
+            KhatmaPlanEntity(
+                title = title,
+                targetDays = targetDays,
+                currentPage = 1,
+                totalPages = 604,
+                pagesPerDay = pagesPerDay
+            )
+        )
+    }
+
+    suspend fun updateKhatmaPage(plan: KhatmaPlanEntity, newPage: Int) {
+        val clamped = newPage.coerceIn(1, 604)
+        dao.updateKhatmaPlan(
+            plan.copy(
+                currentPage = clamped,
+                isCompleted = clamped >= 604
+            )
+        )
+    }
+
+    suspend fun deleteKhatmaPlan(plan: KhatmaPlanEntity) {
+        dao.deleteKhatmaPlan(plan)
+    }
+
     // Settings modifiers
     fun updateFontSize(newSizeSp: Float) {
         _userSettings.value = _userSettings.value.copy(quranFontSizeSp = newSizeSp.coerceIn(18f, 38f))
@@ -131,5 +236,13 @@ class NoorRepository(context: Context) {
 
     fun setSelectedCity(city: CityLocation) {
         _userSettings.value = _userSettings.value.copy(selectedCity = city)
+    }
+
+    fun setAppLanguage(languageCode: String) {
+        _userSettings.value = _userSettings.value.copy(appLanguageCode = languageCode)
+    }
+
+    fun setSelectedTafsirSource(source: TafsirSource) {
+        _userSettings.value = _userSettings.value.copy(selectedTafsirSource = source)
     }
 }

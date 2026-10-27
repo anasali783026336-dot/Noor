@@ -407,6 +407,112 @@ fun HomeScreen(
                         onClick = { viewModel.navigateTo(Screen.Search) }
                     )
                 }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    QuickActionTile(
+                        title = "معلم القرآن AI",
+                        subtitle = "مرشد واختبارات",
+                        icon = Icons.Default.AutoStories,
+                        badgeColor = EmeraldDeep,
+                        modifier = Modifier.weight(1f),
+                        onClick = { viewModel.navigateTo(Screen.AiTutor) }
+                    )
+                    QuickActionTile(
+                        title = "موضوعات القرآن",
+                        subtitle = "فهرس ومجموعات",
+                        icon = Icons.Default.Category,
+                        badgeColor = GoldMuted,
+                        modifier = Modifier.weight(1f),
+                        onClick = { viewModel.navigateTo(Screen.Topics) }
+                    )
+                    QuickActionTile(
+                        title = "ختمات القرآن",
+                        subtitle = "تنظيم ومتابعة",
+                        icon = Icons.Default.Flag,
+                        badgeColor = EmeraldMedium,
+                        modifier = Modifier.weight(1f),
+                        onClick = { viewModel.navigateTo(Screen.Khatma) }
+                    )
+                }
+            }
+        }
+
+        // AI Quran Tutor Feature Banner
+        item {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = EmeraldDeep),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp)
+                    .border(1.dp, GoldBright, RoundedCornerShape(16.dp))
+                    .clickable { viewModel.navigateTo(Screen.AiTutor) }
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(GoldWarm.copy(alpha = 0.2f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Psychology,
+                            contentDescription = null,
+                            tint = GoldWarm,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "معلم القرآن بالذكاء الاصطناعي",
+                                fontFamily = CairoFontFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = GoldWarm
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = GoldBright
+                            ) {
+                                Text(
+                                    text = "RAG موثق",
+                                    fontFamily = CairoFontFamily,
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = EmeraldDeep,
+                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                )
+                            }
+                        }
+                        Text(
+                            text = "إجابات فورية مسترجعة من أمهات التفاسير، اختبارات حفظ، ومساعد خطط",
+                            fontFamily = CairoFontFamily,
+                            fontSize = 11.sp,
+                            lineHeight = 16.sp,
+                            color = PureWhite.copy(alpha = 0.9f)
+                        )
+                    }
+
+                    Icon(
+                        imageVector = Icons.Default.ChevronLeft,
+                        contentDescription = "فتح المعلم",
+                        tint = GoldWarm
+                    )
+                }
             }
         }
 

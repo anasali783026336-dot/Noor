@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.example.ui.components.AyahContextMenuSheet
 import com.example.ui.components.MiniPlayerBar
 import com.example.ui.components.NoorBottomBar
 import com.example.ui.components.NoorTopBar
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
 fun NoorMainApp(viewModel: NoorViewModel) {
     val currentScreen by viewModel.currentScreen.collectAsState()
     val audioState by viewModel.audioState.collectAsState()
+    val contextMenuAyah by viewModel.contextMenuAyah.collectAsState()
 
     // Handle back button from any sub-screen back to Home
     BackHandler(enabled = currentScreen != Screen.Home) {
@@ -71,6 +73,11 @@ fun NoorMainApp(viewModel: NoorViewModel) {
                     is Screen.Settings -> "الإعدادات"
                     is Screen.Downloads -> "إدارة التنزيلات"
                     is Screen.Profile -> "الملف الشخصي"
+                    is Screen.AiTutor -> "معلم القرآن بالذكاء الاصطناعي"
+                    is Screen.RecitationPractice -> "التسميع والتعرف على التلاوة"
+                    is Screen.Topics -> "موضوعات القرآن الكريم"
+                    is Screen.Collections -> "مجموعاتي المختارة"
+                    is Screen.Khatma -> "ختمات القرآن الكريم"
                 },
                 subtitle = if (currentScreen == Screen.Home) "القرآن الكريم والتلاوات والتدبر" else null,
                 showBackButton = currentScreen != Screen.Home,
@@ -134,6 +141,21 @@ fun NoorMainApp(viewModel: NoorViewModel) {
                 is Screen.Settings -> SettingsScreen(viewModel = viewModel)
                 is Screen.Downloads -> DownloadsScreen(viewModel = viewModel)
                 is Screen.Profile -> ProfileScreen(viewModel = viewModel)
+                is Screen.AiTutor -> AiTutorScreen(viewModel = viewModel)
+                is Screen.RecitationPractice -> RecitationPracticeScreen(viewModel = viewModel)
+                is Screen.Topics -> TopicsAndCollectionsScreen(viewModel = viewModel)
+                is Screen.Collections -> TopicsAndCollectionsScreen(viewModel = viewModel)
+                is Screen.Khatma -> KhatmaScreen(viewModel = viewModel)
+            }
+
+            // Global Ayah Context Menu Bottom Sheet
+            contextMenuAyah?.let { (surah, ayah) ->
+                AyahContextMenuSheet(
+                    surah = surah,
+                    ayah = ayah,
+                    viewModel = viewModel,
+                    onDismiss = { viewModel.closeAyahContextMenu() }
+                )
             }
         }
     }

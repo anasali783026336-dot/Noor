@@ -188,6 +188,7 @@ fun MushafScreen(
                 onNextPage = {
                     if (selectedPage < 604) viewModel.openPage(selectedPage + 1)
                 },
+                onAyahClick = { ayah -> viewModel.openAyahContextMenu(selectedSurah, ayah) },
                 modifier = Modifier.weight(1f)
             )
         } else {
@@ -222,7 +223,8 @@ fun MushafScreen(
                         fontSizeSp = fontSizeSp,
                         onPlayClick = { viewModel.playAyahAudio(selectedSurah.number, ayah.numberInSurah) },
                         onTafsirClick = { viewModel.openTafsirForAyah(selectedSurah.number, ayah.numberInSurah) },
-                        onBookmarkToggle = { viewModel.toggleBookmark(selectedSurah, ayah) }
+                        onBookmarkToggle = { viewModel.toggleBookmark(selectedSurah, ayah) },
+                        onContextMenuClick = { viewModel.openAyahContextMenu(selectedSurah, ayah) }
                     )
                 }
             }
@@ -292,6 +294,7 @@ fun MadinahPageView(
     verses: List<com.example.data.model.Ayah>,
     onPreviousPage: () -> Unit,
     onNextPage: () -> Unit,
+    onAyahClick: (com.example.data.model.Ayah) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -369,9 +372,37 @@ fun MadinahPageView(
                 }
 
                 HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 8.dp),
+                    modifier = Modifier.padding(vertical = 6.dp),
                     color = GoldMuted.copy(alpha = 0.5f)
                 )
+
+                // Quick Ayah Action Chips for verses on this page
+                if (verses.isNotEmpty()) {
+                    androidx.compose.foundation.lazy.LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        items(verses) { ayah ->
+                            Surface(
+                                shape = RoundedCornerShape(14.dp),
+                                color = EmeraldDeep.copy(alpha = 0.12f),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, EmeraldMedium.copy(alpha = 0.4f)),
+                                modifier = Modifier.clickable { onAyahClick(ayah) }
+                            ) {
+                                Text(
+                                    text = "آية ${ayah.numberInSurah} ⚙",
+                                    fontFamily = CairoFontFamily,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = EmeraldDeep,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                )
+                            }
+                        }
+                    }
+                }
 
                 // Page Number Indicator
                 Text(

@@ -3,6 +3,8 @@ package com.example.data.audio
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.media.PlaybackParams
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -24,7 +26,11 @@ data class AudioPlayerState(
     val durationMs: Int = 0,
     val repeatMode: Int = 1, // 1x, 3x, 5x, -1 (continuous)
     val remainingRepeats: Int = 1,
+    val playbackSpeed: Float = 1.0f,
     val sleepTimerMinutes: Int = 0,
+    val activePlaylistTitle: String = "",
+    val playlist: List<Pair<Int, Int>> = emptyList(), // List of (surahNumber, ayahNumber)
+    val playlistIndex: Int = 0,
     val error: String? = null
 )
 
@@ -85,6 +91,13 @@ object AudioPlayerManager {
                 )
                 setDataSource(audioUrl)
                 setOnPreparedListener { mp ->
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        try {
+                            mp.playbackParams = mp.playbackParams.setSpeed(_playerState.value.playbackSpeed)
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Could not set playback speed", e)
+                        }
+                    }
                     _playerState.value = _playerState.value.copy(
                         isBuffering = false,
                         isPlaying = true,
@@ -100,7 +113,7 @@ object AudioPlayerManager {
                     _playerState.value = _playerState.value.copy(
                         isPlaying = false,
                         isBuffering = false,
-                        error = "تعذر تشغيل الصوت. تحقق من الاتصال بالإنترنت."
+                        error = "تعذر تشغيل الصوت. جاري التحقق من الشبكة."
                     )
                     true
                 }
@@ -122,23 +135,47 @@ object AudioPlayerManager {
             // Repeat current ayah
             _playerState.value = state.copy(remainingRepeats = state.remainingRepeats - 1)
             playAyah(state.currentSurah.number, state.currentAyahNumber, state.currentReciter)
+            return
+        }
+
+        // If playing from an active playlist
+        if (state.playlist.isNotEmpty() && state.playlistIndex < state.playlist.size - 1) {
+            val nextIndex = state.playlistIndex + 1
+            val nextItem = state.playlist[nextIndex]
+            _playerState.value = state.copy(
+                playlistIndex = nextIndex,
+                remainingRepeats = state.repeatMode
+            )
+            playAyah(nextItem.first, nextItem.second, state.currentReciter)
+            return
+        }
+
+        // Advance to next ayah in surah if available
+        val nextAyah = state.currentAyahNumber + 1
+        if (nextAyah <= state.currentSurah.versesCount) {
+            _playerState.value = state.copy(remainingRepeats = state.repeatMode)
+            playAyah(state.currentSurah.number, nextAyah, state.currentReciter)
         } else {
-            // Advance to next ayah in surah if available
-            val nextAyah = state.currentAyahNumber + 1
-            if (nextAyah <= state.currentSurah.versesCount) {
+            // Advance to next surah
+            val nextSurahNum = state.currentSurah.number + 1
+            if (nextSurahNum <= 114) {
                 _playerState.value = state.copy(remainingRepeats = state.repeatMode)
-                playAyah(state.currentSurah.number, nextAyah, state.currentReciter)
+                playAyah(nextSurahNum, 1, state.currentReciter)
             } else {
-                // Advance to next surah
-                val nextSurahNum = state.currentSurah.number + 1
-                if (nextSurahNum <= 114) {
-                    _playerState.value = state.copy(remainingRepeats = state.repeatMode)
-                    playAyah(nextSurahNum, 1, state.currentReciter)
-                } else {
-                    _playerState.value = state.copy(isPlaying = false, currentPositionMs = 0)
-                }
+                _playerState.value = state.copy(isPlaying = false, currentPositionMs = 0)
             }
         }
+    }
+
+    fun playPlaylist(title: String, items: List<Pair<Int, Int>>) {
+        if (items.isEmpty()) return
+        _playerState.value = _playerState.value.copy(
+            activePlaylistTitle = title,
+            playlist = items,
+            playlistIndex = 0
+        )
+        val firstItem = items[0]
+        playAyah(firstItem.first, firstItem.second)
     }
 
     fun togglePlayPause() {
@@ -159,6 +196,14 @@ object AudioPlayerManager {
 
     fun playNext() {
         val state = _playerState.value
+        if (state.playlist.isNotEmpty() && state.playlistIndex < state.playlist.size - 1) {
+            val nextIndex = state.playlistIndex + 1
+            val nextItem = state.playlist[nextIndex]
+            _playerState.value = state.copy(playlistIndex = nextIndex)
+            playAyah(nextItem.first, nextItem.second, state.currentReciter)
+            return
+        }
+
         val nextAyah = state.currentAyahNumber + 1
         if (nextAyah <= state.currentSurah.versesCount) {
             playAyah(state.currentSurah.number, nextAyah, state.currentReciter)
@@ -172,6 +217,14 @@ object AudioPlayerManager {
 
     fun playPrevious() {
         val state = _playerState.value
+        if (state.playlist.isNotEmpty() && state.playlistIndex > 0) {
+            val prevIndex = state.playlistIndex - 1
+            val prevItem = state.playlist[prevIndex]
+            _playerState.value = state.copy(playlistIndex = prevIndex)
+            playAyah(prevItem.first, prevItem.second, state.currentReciter)
+            return
+        }
+
         val prevAyah = state.currentAyahNumber - 1
         if (prevAyah >= 1) {
             playAyah(state.currentSurah.number, prevAyah, state.currentReciter)
@@ -188,6 +241,19 @@ object AudioPlayerManager {
     fun seekTo(positionMs: Int) {
         mediaPlayer?.seekTo(positionMs)
         _playerState.value = _playerState.value.copy(currentPositionMs = positionMs)
+    }
+
+    fun setPlaybackSpeed(speed: Float) {
+        _playerState.value = _playerState.value.copy(playbackSpeed = speed)
+        mediaPlayer?.let { mp ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                try {
+                    mp.playbackParams = mp.playbackParams.setSpeed(speed)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error updating playback speed", e)
+                }
+            }
+        }
     }
 
     fun setReciter(reciter: Reciter) {

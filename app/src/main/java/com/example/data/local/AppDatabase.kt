@@ -9,9 +9,13 @@ import androidx.room.RoomDatabase
     entities = [
         BookmarkEntity::class,
         ReadingProgressEntity::class,
-        MemorizationEntity::class
+        MemorizationEntity::class,
+        AyahNoteEntity::class,
+        AyahCollectionEntity::class,
+        CollectionAyahItemEntity::class,
+        KhatmaPlanEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

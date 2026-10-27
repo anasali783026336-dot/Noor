@@ -284,6 +284,93 @@ fun AudioPlayerScreen(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Playback Speed Selector Row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "سرعة التلاوة:",
+                fontFamily = CairoFontFamily,
+                fontSize = 12.sp,
+                color = PureWhite.copy(alpha = 0.8f)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            listOf(0.75f, 1.0f, 1.25f, 1.5f).forEach { speed ->
+                val isSel = audioState.playbackSpeed == speed
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (isSel) GoldBright else NightSurface,
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .clickable { AudioPlayerManager.setPlaybackSpeed(speed) }
+                ) {
+                    Text(
+                        text = "${speed}x",
+                        fontFamily = CairoFontFamily,
+                        fontSize = 11.sp,
+                        fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal,
+                        color = if (isSel) EmeraldDeep else PureWhite,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                    )
+                }
+            }
+        }
+
+        // Active Playlist Indicator if playing a collection or surah queue
+        if (audioState.activePlaylistTitle.isNotBlank()) {
+            Spacer(modifier = Modifier.height(14.dp))
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = NightSurface,
+                border = androidx.compose.foundation.BorderStroke(1.dp, GoldMuted.copy(alpha = 0.4f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(imageVector = Icons.Default.PlaylistPlay, contentDescription = null, tint = GoldBright, modifier = Modifier.size(20.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "قائمة التشغيل: ${audioState.activePlaylistTitle}",
+                            fontFamily = CairoFontFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            color = PureWhite
+                        )
+                    }
+                    Text(
+                        text = "${audioState.playlistIndex + 1} / ${audioState.playlist.size}",
+                        fontFamily = CairoFontFamily,
+                        fontSize = 11.sp,
+                        color = GoldWarm
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Open in Mushaf button
+        OutlinedButton(
+            onClick = {
+                viewModel.openSurah(audioState.currentSurah.number, audioState.currentAyahNumber)
+            },
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = GoldBright),
+            border = androidx.compose.foundation.BorderStroke(1.dp, GoldMuted),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Icon(imageVector = Icons.Default.MenuBook, contentDescription = null, modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.width(6.dp))
+            Text("متابعة القراءة في المصحف الشريف", fontFamily = CairoFontFamily, fontSize = 12.sp)
+        }
     }
 
     // Reciters Bottom Sheet

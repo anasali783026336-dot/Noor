@@ -43,6 +43,7 @@ fun AyahItemView(
     onPlayClick: () -> Unit,
     onTafsirClick: () -> Unit,
     onBookmarkToggle: () -> Unit,
+    onContextMenuClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -228,6 +229,20 @@ fun AyahItemView(
                                 contentDescription = "مشاركة",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
+                        }
+
+                        // More / Context Menu
+                        if (onContextMenuClick != null) {
+                            IconButton(
+                                onClick = onContextMenuClick,
+                                modifier = Modifier.testTag("ayah_action_more_${ayah.numberInSurah}")
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreHoriz,
+                                    contentDescription = "خيارات إضافية للآية",
+                                    tint = EmeraldDeep
+                                )
+                            }
                         }
                     }
                 }
